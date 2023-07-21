@@ -1,0 +1,17 @@
+astra:
+  # Allow usage of devops and Stargate apis
+  api:
+    application-token: <your token>
+    database-id: <your db_id>
+    database-region: us-east1
+    cross-region-failback: false
+    grpc:
+      enabled: true
+  # Connectivity to Cassandra
+  cql:
+    enabled: true
+    download-scb:
+      enabled: true
+    driver-config:
+      basic:
+        session-keyspace: demo

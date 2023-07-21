@@ -1,0 +1,59 @@
+</<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>Postcode Geo-Spatial Radius Search</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <script src="https://unpkg.com/deck.gl@latest/dist.min.js"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css' rel='stylesheet' />
+
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+    const {DeckGL, ScatterplotLayer} = deck;
+    const handleClick = (info, event) => {
+        fetch("http://localhost:8080/getPostCodesRadius?mode=real&longitude="+ info.coordinate[0] + "&latitude=" + info.coordinate[1])
+            .then((resp) => resp.json())
+            .then(data => renderLayers(data));
+    };
+
+    const map = new DeckGL({
+        mapboxApiAccessToken: '<you mapbox token>',
+        mapStyle:'https://api.mapbox.com/styles/v1/mapbox/outdoors-v12?access_token=pk.eyJ1IjoiZHJ5ZGVuaG9nZyIsImEiOiJjazhweXBhdTgwM2dnM25ueTdrdWd6bW4xIn0.EMBVzNxh6cTGAf0fixtv-A',
+
+        initialViewState: {
+            longitude:  -2.20707,
+            latitude: 53.37061,
+            zoom: 12,
+            bearing: 0,
+            pitch: 0,
+        },
+        controller: true,
+        onClick: handleClick,
+        layers: [],
+        getTooltip: ({object}) => object && object.postCode
+    });
+
+    function renderLayers(data) {
+        const postCodeLayer = new ScatterplotLayer({
+            id: 'postcodes',
+            data,
+            radiusScale: 10,
+            radiusMinPixels: 0.5,
+            getPosition: d => [d.longitude, d.latitude ,0],
+            getFillColor: [128,0,128],
+            pickable: true,
+            autoHighlight: true,
+        });
+        map.setProps({layers: [postCodeLayer]});
+    };
+
+</script>
+</body>
+</html>
