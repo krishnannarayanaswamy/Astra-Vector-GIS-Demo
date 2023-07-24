@@ -20,12 +20,12 @@ public class FloatGridCircleCalculator implements IValidPointCalculator {
         double longitudeMin = -2.8;
         double longitudeMax = -1.2;
         double latitudeMin = 52.2;
-        double latitideMax = 53.8;
+        double latitudeMax = 53.8;
 
         Random random = new Random();
         for (int i=0; i < numberToGenerate ; i++) {
             double randomLongitude = longitudeMin + (random.nextDouble() * (longitudeMax - longitudeMin));
-            double randomLatitude = latitudeMin + (random.nextDouble() * (latitideMax - latitudeMin));
+            double randomLatitude = latitudeMin + (random.nextDouble() * (latitudeMax - latitudeMin));
             values.add(new Point(0, (float)randomLongitude, (float)randomLatitude));
         }
         return values;

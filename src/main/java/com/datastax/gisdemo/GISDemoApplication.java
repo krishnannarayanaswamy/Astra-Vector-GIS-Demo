@@ -5,10 +5,7 @@ import com.datastax.gisdemo.dataLoading.IDataLoader;
 import com.datastax.gisdemo.dataLoading.RealDataLoader;
 import com.datastax.gisdemo.dataLoading.FauxFloatDataLoader;
 import com.datastax.gisdemo.model.PostCode;
-import com.datastax.gisdemo.validation.FloatGridCircleCalculator;
-import com.datastax.gisdemo.validation.IValidPointCalculator;
-import com.datastax.gisdemo.validation.IntGridCircleCalculator;
-import com.datastax.gisdemo.validation.Validation;
+import com.datastax.gisdemo.validation.*;
 import com.datastax.astra.sdk.AstraClient;
 import com.datastax.oss.driver.api.core.data.CqlVector;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,8 +56,11 @@ public class GISDemoApplication {
             case "int_grid":
                 validator = new  IntGridCircleCalculator();
                 break;
+            case "real":
+                validator = new RealPostCodesCircleCalculator();
+                break;
             default:
-                return "Invalid Mode - please use float_grid or int_grid for validation checks";
+                return "Invalid Mode - please use float_grid, int_grid or real for validation checks";
         }
         return Validation.runRandomChecks(astraClient, validator, iterations, limit);
     }
